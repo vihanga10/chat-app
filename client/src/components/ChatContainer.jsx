@@ -1,7 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import assets, { messagesDummyData } from '../assets/assets'
 
 const ChatContainer = ({selectedUser,setSelectedUser}) => {
+
+      const scrollEnd = useRef();
+      useEffect(()=>{
+        if(scrollEnd.current){
+          scrollEnd.current.scrollIntoView({behavior:"smooth"})
+        }
+      },[])
+
   return selectedUser ? (
     <div className='h-full overflow-scroll relative backdrop-blur-lg'>
       {/* Header */}
@@ -18,13 +26,22 @@ const ChatContainer = ({selectedUser,setSelectedUser}) => {
           {messagesDummyData.map((msg, index)=>(
             <div key={index} className={`flex items-end gap-2 justify-end ${msg.senderId !== `680f50e4f10f3cd28382ecf9` && 'flex-row-reverse'}`}>
               {msg.image ? (
-                <img src={assets.image} alt="" />
+                <img src={msg.image} alt="" className='max-w-[230px] border border-gray-700 rounded-lg overflow-hidden mb-8' />
               ):(
-                <p>{msg.text}</p>
+                <p className={`p-2 max-w-[200px] md:text-sm font-light rounded-lg mb-8 break-all bg-violet-500/30 text-white ${msg.senderId === '680f50e4f10f3cd28382ecf9' ? 'rounded-br-none':'rounded-bl-none'}`}>{msg.text}</p>
               )}
+
+              <div className="text-center text-xs">
+                <img src={msg.senderId === '680f50e4f10f3cd28382ecf9' ? assets.avatar_icon : assets.profile_martin} alt="" className='w-7 rounded-full' />
+                <p className='text-gray-500'>{msg.createdAt}</p>
+
+              </div>
 
             </div>
           ))}
+          <div ref={scrollEnd}>
+
+          </div>
 
         </div>
     </div>
